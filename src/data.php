@@ -10,6 +10,11 @@ $fields = [
 	'filterId' => -2
 ];
 
+$version = null;
+
+if(file_exists(__DIR__ . '/../version'))
+	$version = file_get_contents(__DIR__ . '/../version');
+
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_POST, true);
@@ -59,4 +64,9 @@ usort($periods, function ($a, $b) {
 	return $a['startTime']['total'] - $b['startTime']['total'];
 });
 
-echo json_encode($periods, JSON_PRETTY_PRINT);
+$json = [
+	'periods' => $periods,
+	'version' => $version
+];
+
+echo json_encode($json, JSON_PRETTY_PRINT);

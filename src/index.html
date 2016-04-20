@@ -13,13 +13,14 @@
 		<div class="row">
 			<div class="col-sm-12 col-md-offset-3 col-md-6 col-lg-offset-col-4 lg-4">
 				<div id="items"></div>
+				<hr />
+				<a href="https://github.com/HetIsNiels/ndat-rooster" title="View on GitHub">ndat-rooster <span data-version-tag></span></a>
 			</div>
 		</div>
 	</div>
 
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
-	<script type="text/javascript"
-			src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 	<script id="timetable-template" type="text/x-handlebars-template">
 		<div class="panel">
 			<div class="panel-body">
@@ -43,8 +44,8 @@
 						</p>
 					</div>
 					<div class="col-sm-6">
-						<p class="text-center" title="{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-							{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+						<p class="text-center" title="{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+							{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
 						</p>
 					</div>
 				</div>
@@ -52,22 +53,25 @@
 		</div>
 	</script>
 	<script type="text/javascript">
-		function updateTimetable(json) {
+		function updateTimetable(periods) {
 			var container = document.getElementById('items');
 			var template = Handlebars.compile(document.getElementById('timetable-template').innerHTML);
 
-			for (var key in json) {
-				if (!json.hasOwnProperty(key))
+			for (var key in periods) {
+				if (!periods.hasOwnProperty(key))
 					continue;
 
-				var item = json[key];
+				var item = periods[key];
 
 				container.innerHTML += template(item);
 			}
 		}
 
 		window.addEventListener('load', function () {
-			$.getJSON('data.php', updateTimetable);
+			$.getJSON('data.php', function(json){
+				updateTimetable(json.periods);
+				$('[data-version-tag]').text(json.version);
+			});
 		});
 	</script>
 </body>
