@@ -72,7 +72,9 @@ foreach ($json['result']['data']['elementPeriods'][$fields['elementId']] as $per
 			$newPeriod['elements'][$element['type']][] = $elements[$element['id']];
 	}
 
-	$periods[] = $newPeriod;
+	if($newPeriod != end($periods))
+		$periods[] = $newPeriod;
+	
 	$lastTime = $period['startTime'];
 }
 
