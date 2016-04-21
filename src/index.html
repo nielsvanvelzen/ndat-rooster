@@ -5,8 +5,13 @@
 
 	<title>Rooster</title>
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="assets/lib/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="assets/lib/bootstrap/css/bootstrap-theme.min.css" />
+	<script type="text/javascript" src="assets/lib/jquery/jquery-2.2.3.min.js"></script>
+	<script type="text/javascript" src="assets/lib/async/async.min.js"></script>
+	<script type="text/javascript" src="assets/lib/handlebars/handlebars-v4.0.5.js"></script>
+
+	<script type="text/javascript" src="assets/js/ndat-rooster.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -17,72 +22,9 @@
 					<div class="text-center">Rooster wordt opgehaald.</div>
 				</div>
 				<hr />
-				<a href="https://github.com/HetIsNiels/ndat-rooster" title="View on GitHub">ndat-rooster <span
-						data-version-tag></span></a>
+				<a href="https://github.com/HetIsNiels/ndat-rooster" title="GitHub">ndat-rooster <span data-version-tag></span></a>
 			</div>
 		</div>
 	</div>
-
-	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
-	<script type="text/javascript"
-			src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
-	<script id="timetable-template" type="text/x-handlebars-template">
-		<div class="panel">
-			<div class="panel-body">
-				<p class="text-center">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
-				<div class="row">
-					<div class="col-sm-6">
-						<p class="text-center"
-						   title="{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-							{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
-						</p>
-					</div>
-					<div class="col-sm-6">
-						<p class="text-center"
-						   title="{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-							{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
-						</p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-6">
-						<p class="text-center"
-						   title="{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-							{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
-						</p>
-					</div>
-					<div class="col-sm-6">
-						<p class="text-center"
-						   title="{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-							{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</script>
-	<script type="text/javascript">
-		function updateTimetable(periods) {
-			var container = document.getElementById('items');
-			var template = Handlebars.compile(document.getElementById('timetable-template').innerHTML);
-
-			container.innerHTML = '';
-			for (var key in periods) {
-				if (!periods.hasOwnProperty(key))
-					continue;
-
-				var item = periods[key];
-
-				container.innerHTML += template(item);
-			}
-		}
-
-		window.addEventListener('load', function () {
-			$.getJSON('data.php', function (json) {
-				updateTimetable(json.periods);
-				$('[data-version-tag]').text(json.version);
-			});
-		});
-	</script>
 </body>
 </html>

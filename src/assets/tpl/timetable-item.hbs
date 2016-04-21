@@ -1,0 +1,33 @@
+<div class="panel">
+	<div class="panel-body">
+		<p class="text-center">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
+		<div class="row">
+			<div class="col-sm-6">
+				<p class="text-center"
+				   title="{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+					{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+				</p>
+			</div>
+			<div class="col-sm-6">
+				<p class="text-center"
+				   title="{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+					{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+				</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6">
+				<p class="text-center"
+				   title="{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+					{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+				</p>
+			</div>
+			<div class="col-sm-6">
+				<p class="text-center"
+				   title="{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+					{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+				</p>
+			</div>
+		</div>
+	</div>
+</div>

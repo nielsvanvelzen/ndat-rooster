@@ -12,7 +12,7 @@ $fields = [
 
 $version = null;
 
-if(file_exists(__DIR__ . '/../version'))
+if (file_exists(__DIR__ . '/../version'))
 	$version = file_get_contents(__DIR__ . '/../version');
 
 $ch = curl_init();
@@ -37,27 +37,43 @@ $periods = [];
 foreach ($json['result']['data']['elements'] as $element)
 	$elements[$element['id']] = $element;
 
+$lastTime = null;
+
 foreach ($json['result']['data']['elementPeriods'][$fields['elementId']] as $period) {
 	if ($period['date'] != $fields['date'])
 		continue;
 
-	$newPeriod = [];
-	$newPeriod['id'] = $period['id'];
-	$newPeriod['startTime'] = [
-		'hour' => substr($period['startTime'], 0, -2),
-		'minute' => substr($period['startTime'], -2),
-		'total' => ((int)substr($period['startTime'], 0, -2) * 60) + ((int)substr($period['startTime'], -2))
-	];
-	$newPeriod['endTime'] = [
-		'hour' => substr($period['endTime'], 0, -2),
-		'minute' => substr($period['endTime'], -2),
-		'total' => ((int)substr($period['endTime'], 0, -2) * 60) + ((int)substr($period['endTime'], -2))
-	];
-	$newPeriod['elements'] = [];
-	foreach ($period['elements'] as $element)
-		$newPeriod['elements'][$element['type']][] = $elements[$element['id']];
+	if ($lastTime != null && $lastTime === $period['startTime']) {
+		$newPeriod = end($periods);
+	} else {
+		$newPeriod = [];
+		$newPeriod['id'] = $period['id'];
+		$newPeriod['startTime'] = [
+			'hour' => substr($period['startTime'], 0, -2),
+			'minute' => substr($period['startTime'], -2),
+			'total' => ((int)substr($period['startTime'], 0, -2) * 60) + ((int)substr($period['startTime'], -2))
+		];
+		$newPeriod['endTime'] = [
+			'hour' => substr($period['endTime'], 0, -2),
+			'minute' => substr($period['endTime'], -2),
+			'total' => ((int)substr($period['endTime'], 0, -2) * 60) + ((int)substr($period['endTime'], -2))
+		];
+		$newPeriod['elements'] = [];
+	}
+
+	foreach ($period['elements'] as $element) {
+		$found = false;
+
+		foreach ($newPeriod['elements'][$element['type']] as $existingElement)
+			if ($existingElement['id'] === $element['id'])
+				$found = true;
+
+		if (!$found)
+			$newPeriod['elements'][$element['type']][] = $elements[$element['id']];
+	}
 
 	$periods[] = $newPeriod;
+	$lastTime = $period['startTime'];
 }
 
 usort($periods, function ($a, $b) {
