@@ -6,40 +6,65 @@
 					<h1 class="text-center"><span class="glyphicon glyphicon-refresh"></span></h1>
 					<div class="text-center">Rooster wordt opgehaald.</div>
 				{{else}}
+					<!--<div class="dropdown">
+						<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+							{{#if class.display_name}}
+						{{class.display_name}}
+					{{else}}
+								Kies een klas
+							{{/if}}
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" style="overflow: auto; max-height: 400px;">
+							{{#each classes}}
+								<li><a href="#">{{display_name}}</a></li>
+							{{/each}}
+						</ul>
+					</div>-->
+
 					{{#each periods}}
-						<div class="panel" style="border-left: 5px solid {{color}};">
-							<div class="panel-body">
-								<p class="text-center">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
-								<div class="row">
-									<div class="col-sm-6">
-										<p class="text-center"
-										   title="{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-											{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
-										</p>
-									</div>
-									<div class="col-sm-6">
-										<p class="text-center"
-										   title="{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-											{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
-										</p>
-									</div>
+						{{#if isBreak}}
+							<div class="panel">
+								<div class="panel-body">
+									<p class="text-center">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
+									<p class="text-center">{{#if isLongBreak}}Tussenuur{{else}}Pauze{{/if}}</p>
 								</div>
-								<div class="row">
-									<div class="col-sm-6">
-										<p class="text-center"
-										   title="{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-											{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
-										</p>
+							</div>
+						{{else}}
+							<div class="panel" style="border-left: 5px solid {{color}};">
+								<div class="panel-body">
+									<p class="text-center">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
+									<div class="row">
+										<div class="col-xs-6">
+											<p class="text-center"
+											   title="{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+												{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+											</p>
+										</div>
+										<div class="col-xs-6">
+											<p class="text-center"
+											   title="{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+												{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+											</p>
+										</div>
 									</div>
-									<div class="col-sm-6">
-										<p class="text-center"
-										   title="{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-											{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
-										</p>
+									<div class="row">
+										<div class="col-xs-6">
+											<p class="text-center"
+											   title="{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+												{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+											</p>
+										</div>
+										<div class="col-xs-6">
+											<p class="text-center"
+											   title="{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+												{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+											</p>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
+						{{/if}}
 					{{/each}}
 				{{/if}}
 			</div>

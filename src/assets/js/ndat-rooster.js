@@ -4,9 +4,10 @@ var app = {
 	},
 
 	tpl: null,
+	enableCache: false,
 
 	apiRequest: function (action, data, callback) {
-		if (window.localStorage.getItem('api-' + action) !== null) {
+		if (app.enableCache && window.localStorage.getItem('api-' + action) !== null) {
 			var json = JSON.parse(window.localStorage.getItem('api-' + action));
 
 			if (json.date >= Date.now() - 15 * 60 * 1000) {
@@ -68,7 +69,20 @@ var app = {
 				});
 			},
 			tpl: function (cb) {
+				if (app.enableCache && window.localStorage.getItem('api-site') !== null) {
+					var json = JSON.parse(window.localStorage.getItem('tpl-site'));
+
+					if (json.date >= Date.now() - 15 * 60 * 1000) {
+						app.tpl = Handlebars.compile(json.tpl);
+
+						cb();
+						return;
+					}
+				}
+
 				$.get('assets/tpl/site.hbs', function (tpl) {
+					window.localStorage.setItem('tpl-site', JSON.stringify({date: Date.now(), tpl: tpl}));
+
 					app.tpl = Handlebars.compile(tpl);
 
 					cb();

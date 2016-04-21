@@ -54,6 +54,7 @@ switch ($action) {
 			$elements[$element['id']] = $element;
 
 		$lastTime = null;
+		$lastTimeEnd = null;
 
 		foreach ($json['result']['data']['elementPeriods'][$fields['elementId']] as $period) {
 			if ($period['date'] != $fields['date'])
@@ -63,6 +64,22 @@ switch ($action) {
 				$newPeriod = end($periods);
 				array_pop($periods);
 			} else {
+				if($lastTime != null && $lastTimeEnd != $period['startTime']){
+					$break = [];
+					$previousPeriod = end($periods);
+					$break['startTime'] = $previousPeriod['endTime'];
+					$break['endTime'] = [
+						'hour' => substr($period['startTime'], 0, -2),
+						'minute' => substr($period['startTime'], -2),
+						'total' => ((int)substr($period['startTime'], 0, -2) * 60) + ((int)substr($period['startTime'], -2))
+					];
+					$break['isBreak'] = true;
+					$break['isLongBreak'] = $break['endTime']['total'] - $break['startTime']['total'] > 15; //todo
+					$break['elements'] = [];
+
+					$periods[] = $break;
+				}
+
 				$newPeriod = [];
 				$newPeriod['id'] = $period['id'];
 				$newPeriod['startTime'] = [
@@ -93,6 +110,7 @@ switch ($action) {
 			$periods[] = $newPeriod;
 
 			$lastTime = $period['startTime'];
+			$lastTimeEnd = $period['endTime'];
 		}
 
 		usort($periods, function ($a, $b) {
