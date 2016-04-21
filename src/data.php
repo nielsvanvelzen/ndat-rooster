@@ -45,6 +45,7 @@ foreach ($json['result']['data']['elementPeriods'][$fields['elementId']] as $per
 
 	if ($lastTime != null && $lastTime === $period['startTime']) {
 		$newPeriod = end($periods);
+		array_pop($periods);
 	} else {
 		$newPeriod = [];
 		$newPeriod['id'] = $period['id'];
@@ -72,9 +73,8 @@ foreach ($json['result']['data']['elementPeriods'][$fields['elementId']] as $per
 			$newPeriod['elements'][$element['type']][] = $elements[$element['id']];
 	}
 
-	if($newPeriod != end($periods))
-		$periods[] = $newPeriod;
-	
+	$periods[] = $newPeriod;
+
 	$lastTime = $period['startTime'];
 }
 
