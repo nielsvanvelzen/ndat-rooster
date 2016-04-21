@@ -1,0 +1,50 @@
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 col-md-offset-3 col-md-6 col-lg-offset-col-4 lg-4">
+			<div id="items">
+				{{#if loading}}
+					<h1 class="text-center"><span class="glyphicon glyphicon-refresh"></span></h1>
+					<div class="text-center">Rooster wordt opgehaald.</div>
+				{{else}}
+					{{#each periods}}
+						<div class="panel" style="border-left: 5px solid {{color}};">
+							<div class="panel-body">
+								<p class="text-center">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
+								<div class="row">
+									<div class="col-sm-6">
+										<p class="text-center"
+										   title="{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+											{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+										</p>
+									</div>
+									<div class="col-sm-6">
+										<p class="text-center"
+										   title="{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+											{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<p class="text-center"
+										   title="{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+											{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+										</p>
+									</div>
+									<div class="col-sm-6">
+										<p class="text-center"
+										   title="{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+											{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					{{/each}}
+				{{/if}}
+			</div>
+			<hr />
+			<a href="https://github.com/HetIsNiels/ndat-rooster" title="GitHub">{{version}}</a>
+		</div>
+	</div>
+</div>

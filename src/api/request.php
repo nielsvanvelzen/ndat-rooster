@@ -26,8 +26,8 @@ switch ($action) {
 
 $version = null;
 
-if (file_exists(__DIR__ . '/../version'))
-	$version = file_get_contents(__DIR__ . '/../version');
+if (file_exists(__DIR__ . '/../../version'))
+	$version = file_get_contents(__DIR__ . '/../../version');
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);

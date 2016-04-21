@@ -1,48 +1,87 @@
-function updateTimetable(template, periods) {
-	var container = document.getElementById('items');
+var app = {
+	data: {
+		loading: true
+	},
 
-	container.innerHTML = '';
-	for (var key in periods) {
-		if (!periods.hasOwnProperty(key))
-			continue;
+	tpl: null,
 
-		var item = periods[key];
+	apiRequest: function (action, data, callback) {
+		if (window.localStorage.getItem('api-' + action) !== null) {
+			var json = JSON.parse(window.localStorage.getItem('api-' + action));
 
-		container.innerHTML += template(item);
+			if (json.date >= Date.now() - 15 * 60 * 1000) {
+				callback(json.result);
+				return;
+			}
+		}
+
+		$.getJSON('api/request.php?action=' + action, function (json) {
+			window.localStorage.setItem('api-' + action, JSON.stringify({date: Date.now(), result: json}));
+
+			callback(json);
+		});
+	},
+
+	updateTimetable: function (periods) {
+		for (var key in periods) {
+			if (!periods.hasOwnProperty(key))
+				continue;
+
+			var item = periods[key];
+
+			var colorString = '';
+			for (var elementKey in item.elements)
+				if (item.elements.hasOwnProperty(elementKey))
+					for (var elementSubKey in item.elements[elementKey])
+						if (item.elements[elementKey].hasOwnProperty(elementSubKey))
+							colorString += item.elements[elementKey][elementSubKey]['longName'];
+
+			item.color = '#' + md5(colorString).slice(0, 6);
+		}
+
+		app.data.periods = periods;
+	},
+
+	updateClasslist: function (classes) {
+		app.data.classes = classes;
+	},
+
+	updateTemplate: function () {
+		document.body.innerHTML = app.tpl(app.data);
+	},
+
+	initialize: function () {
+		async.parallel({
+			json: function (cb) {
+				app.apiRequest('timetable', [], function (json) {
+					app.data.version = json.version;
+					app.updateTimetable(json.result);
+
+					cb();
+				});
+			},
+			classes: function (cb) {
+				app.apiRequest('classes', [], function (json) {
+					app.updateClasslist(json.result);
+
+					cb();
+				});
+			},
+			tpl: function (cb) {
+				$.get('assets/tpl/site.hbs', function (tpl) {
+					app.tpl = Handlebars.compile(tpl);
+
+					cb();
+				});
+			}
+		}, function () {
+			app.data.loading = false;
+			app.updateTemplate();
+		});
 	}
-}
+};
 
-function updateClasslist(classes){
-	for(var key in classes){
-		if(!classes.hasOwnProperty(key))
-			continue;
-
-		var element = classes[key];
-
-		document.getElementById('classes').innerHTML += '<option value="' + element.id + '">' + element.display_name + '</option>';
-	}
-}
 
 window.addEventListener('load', function () {
-	async.parallel({
-		json: function (cb) {
-			$.getJSON('api/request.php?action=timetable', function (json) {
-				cb(null, json);
-			});
-		},
-		/*classes: function (cb) {
-			$.getJSON('api/request.php?action=classes', function (json) {
-				cb(null, json);
-			});
-		},*/
-		tpl: function (cb) {
-			$.get('assets/tpl/timetable-item.hbs', function (tpl) {
-				cb(null, Handlebars.compile(tpl));
-			});
-		}
-	}, function (err, result) {
-		updateTimetable(result.tpl, result.json.result);
-		//updateClasslist(result.classes.result);
-		$('[data-version-tag]').text(result.json.version);
-	});
+	app.initialize();
 });
