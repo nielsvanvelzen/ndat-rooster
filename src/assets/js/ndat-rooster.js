@@ -1,14 +1,15 @@
 var app = {
 	data: {
-		loading: true
+		loading: true,
+		date: new Date()
 	},
 
 	tpl: null,
-	enableCache: false,
+	enableCache: true,
 
 	apiRequest: function (action, data, callback) {
-		if (app.enableCache && window.localStorage.getItem('api-' + action) !== null) {
-			var json = JSON.parse(window.localStorage.getItem('api-' + action));
+		if (app.enableCache && window.localStorage.getItem('api-' + action + '-' + data.join('-')) !== null) {
+			var json = JSON.parse(window.localStorage.getItem('api-' + action + '-' + data.join('-')));
 
 			if (json.date >= Date.now() - 15 * 60 * 1000) {
 				callback(json.result);
@@ -16,14 +17,33 @@ var app = {
 			}
 		}
 
-		$.getJSON('api/request.php?action=' + action, function (json) {
-			window.localStorage.setItem('api-' + action, JSON.stringify({date: Date.now(), result: json}));
+		$.getJSON('api/request.php?action=' + action + '&' + data.join('&'), function (json) {
+			window.localStorage.setItem('api-' + action + '-' + data.join('-'), JSON.stringify({date: Date.now(), result: json}));
 
 			callback(json);
 		});
 	},
 
+	addDate: function (days) {
+		app.data.date.setDate(app.data.date.getDate() + days);
+		app.updateTimetable();
+	},
+
 	updateTimetable: function (periods) {
+		if (periods === undefined) {
+			app.data.loading = true;
+			app.updateTemplate();
+
+			app.apiRequest('timetable', ['time=' + app.data.date.toISOString()], function (json) {
+				app.data.loading = false;
+				app.data.version = json.version;
+				app.updateTimetable(json.result);
+				app.updateTemplate();
+			});
+
+			return;
+		}
+
 		for (var key in periods) {
 			if (!periods.hasOwnProperty(key))
 				continue;
@@ -52,9 +72,12 @@ var app = {
 	},
 
 	initialize: function () {
+		if (window.localStorage.getItem('disable-cache') === 'please')
+			app.enableCache = false;
+
 		async.parallel({
 			json: function (cb) {
-				app.apiRequest('timetable', [], function (json) {
+				app.apiRequest('timetable', ['time=' + app.data.date.toISOString()], function (json) {
 					app.data.version = json.version;
 					app.updateTimetable(json.result);
 

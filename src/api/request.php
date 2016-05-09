@@ -8,10 +8,11 @@ switch ($action) {
 		$fields['ajaxCommand'] = 'getWeeklyTimetable';
 		$fields['elementType'] = 1;
 		$fields['elementId'] = 3637; // id of class
-		$fields['date'] = date('Ymd');
+		$fields['date'] = date('Ymd', strtotime($_GET['time']) ?? time());
 		$fields['formatId'] = 3;
 		$fields['departmentId'] = 29;
 		$fields['filterId'] = -2;
+
 		break;
 
 	case 'classes':
@@ -56,7 +57,7 @@ switch ($action) {
 		$lastTime = null;
 		$lastTimeEnd = null;
 
-		usort($json['result']['data']['elementPeriods'][$fields['elementId']], function($a, $b){
+		usort($json['result']['data']['elementPeriods'][$fields['elementId']], function ($a, $b) {
 			return $a['startTime'] - $b['startTime'];
 		});
 
@@ -68,7 +69,7 @@ switch ($action) {
 				$newPeriod = end($periods);
 				array_pop($periods);
 			} else {
-				if($lastTime != null && $lastTimeEnd != $period['startTime']){
+				if ($lastTime != null && $lastTimeEnd != $period['startTime']) {
 					$break = [];
 					$previousPeriod = end($periods);
 					$break['startTime'] = $previousPeriod['endTime'];
@@ -102,7 +103,7 @@ switch ($action) {
 			foreach ($period['elements'] as $element) {
 				$found = false;
 
-				if(isset($newPeriod['elements'][$element['type']]))
+				if (isset($newPeriod['elements'][$element['type']]))
 					foreach ($newPeriod['elements'][$element['type']] as $existingElement)
 						if ($existingElement['id'] === $element['id'])
 							$found = true;
@@ -127,7 +128,7 @@ switch ($action) {
 	default:
 		$classes = [];
 
-		foreach($json['elements'] as $element){
+		foreach ($json['elements'] as $element) {
 			$classes[] = [
 				'id' => $element['id'],
 				'display_name' => $element['displayname'],
