@@ -1,5 +1,5 @@
 # ndat-rooster
-De code in deze repository is gemaakt voor http://rooster.ndat.nl/.
+De code in deze repository is gemaakt voor https://rooster.ndat.nl/.
 Het idee is om een simpele en overzichtelijke interface te maken voor het huidige rooster op het ID College.
 
 ## Suggesties en fouten
