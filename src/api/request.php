@@ -56,6 +56,10 @@ switch ($action) {
 		$lastTime = null;
 		$lastTimeEnd = null;
 
+		usort($json['result']['data']['elementPeriods'][$fields['elementId']], function($a, $b){
+			return $a['startTime'] - $b['startTime'];
+		});
+
 		foreach ($json['result']['data']['elementPeriods'][$fields['elementId']] as $period) {
 			if ($period['date'] != $fields['date'])
 				continue;
@@ -74,7 +78,7 @@ switch ($action) {
 						'total' => ((int)substr($period['startTime'], 0, -2) * 60) + ((int)substr($period['startTime'], -2))
 					];
 					$break['isBreak'] = true;
-					$break['isLongBreak'] = $break['endTime']['total'] - $break['startTime']['total'] > 15; //todo
+					$break['isLongBreak'] = $break['endTime']['total'] - $break['startTime']['total'] > 15;
 					$break['elements'] = [];
 
 					$periods[] = $break;
