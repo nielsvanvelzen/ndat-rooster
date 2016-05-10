@@ -6,6 +6,8 @@ var app = {
 
 	tpl: null,
 	enableCache: true,
+	days: ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
+	months: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'november', 'december'],
 
 	apiRequest: function (action, data, callback) {
 		if (app.enableCache && window.localStorage.getItem('api-' + action + '-' + data.join('-')) !== null) {
@@ -74,6 +76,30 @@ var app = {
 	initialize: function () {
 		if (window.localStorage.getItem('disable-cache') === 'please')
 			app.enableCache = false;
+
+		if (window.location.hash.length > 1) {
+			this.data.date = new Date(decodeURIComponent(window.location.hash.split('date=')[1]));
+		}
+
+		Handlebars.registerHelper('date_str', function (date, type) {
+			if (type === 1) {
+				var days = Math.ceil((date.getTime() - Date.now()) / 86400000);
+				console.log(days);
+
+				if (days === -2)
+					return 'Eergisteren';
+				else if (days === -1)
+					return 'Gisteren';
+				else if (days === 0)
+					return 'Vandaag';
+				else if (days === 1)
+					return 'Morgen';
+				else if (days === 2)
+					return 'Overmorgen';
+			}
+
+			return app.days[date.getDay()] + ' ' + date.getDate() + ' ' + app.months[date.getMonth()];
+		});
 
 		async.parallel({
 			json: function (cb) {

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+	<title>Rooster</title>
+</head>
+<body style="margin: 0; height: 100%;">
+	<div style="display: flex; height: 100%;" id="week"></div>
+	<script type="text/javascript">
+		var date = new Date();
+		var monday = new Date(date.setDate(date.getDate() - date.getDay()));
+
+		for(var i = 0; i < 4; i++){
+			var dateStr = encodeURIComponent(new Date(date.setDate(date.getDate() + 1)).toISOString());
+
+			document.getElementById('week').innerHTML += '<iframe style="border: none; width: 100%; height: 100%;" src="index.html#date=' + dateStr + '"></iframe>';
+		}
+	</script>
+</body>
+</html>
