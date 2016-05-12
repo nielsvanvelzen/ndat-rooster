@@ -1,28 +1,36 @@
 var app = {
 	data: {
 		loading: true,
+		elementType: null,
+		elementId: null, // ao14a = 3637,
 		date: new Date()
 	},
 
 	tpl: null,
-	enableCache: true,
 	days: ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
 	months: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'november', 'december'],
+	elements: {},
 
 	apiRequest: function (action, data, callback) {
-		if (app.enableCache && window.localStorage.getItem('api-' + action + '-' + data.join('-')) !== null) {
-			var json = JSON.parse(window.localStorage.getItem('api-' + action + '-' + data.join('-')));
+		var dataStr = '';
 
-			if (json.date >= Date.now() - 15 * 60 * 1000) {
-				callback(json.result);
-				return;
-			}
-		}
+		for (var key in data)
+			if (data.hasOwnProperty(key))
+				dataStr += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
 
-		$.getJSON('api/request.php?action=' + action + '&' + data.join('&'), function (json) {
-			window.localStorage.setItem('api-' + action + '-' + data.join('-'), JSON.stringify({date: Date.now(), result: json}));
-
+		$.getJSON('api/request.php?action=' + action + dataStr, function (json) {
 			callback(json);
+		});
+	},
+
+	getElements: function (type, cb) {
+		if (type in app.elements && app.elements[type] != null && app.elements[type].length > 0)
+			return cb(app.elements[type]);
+
+		app.apiRequest('elements', {elementType: type}, function (json) {
+			app.elements[type] = json.result;
+
+			cb(json.result);
 		});
 	},
 
@@ -36,7 +44,7 @@ var app = {
 			app.data.loading = true;
 			app.updateTemplate();
 
-			app.apiRequest('timetable', ['time=' + app.data.date.toISOString()], function (json) {
+			app.apiRequest('timetable', {time: app.data.date.toISOString(), elementType: app.data.elementType, elementId: app.data.elementId}, function (json) {
 				app.data.loading = false;
 				app.data.version = json.version;
 				app.updateTimetable(json.result);
@@ -65,26 +73,26 @@ var app = {
 		app.data.periods = periods;
 	},
 
-	updateClasslist: function (classes) {
-		app.data.classes = classes;
+	updateClasslist: function (elements) {
+		app.data.elements = elements;
 	},
 
 	updateTemplate: function () {
 		document.body.innerHTML = app.tpl(app.data);
+		$('.select2').select2();
 	},
 
 	initialize: function () {
-		if (window.localStorage.getItem('disable-cache') === 'please')
-			app.enableCache = false;
-
 		if (window.location.hash.length > 1) {
 			this.data.date = new Date(decodeURIComponent(window.location.hash.split('date=')[1]));
 		}
 
+		app.data.elementType = window.localStorage.getItem('elementType');
+		app.data.elementId = window.localStorage.getItem('elementId');
+
 		Handlebars.registerHelper('date_str', function (date, type) {
 			if (type === 1) {
 				var days = Math.ceil((date.getTime() - Date.now()) / 86400000);
-				console.log(days);
 
 				if (days === -2)
 					return 'Eergisteren';
@@ -101,37 +109,31 @@ var app = {
 			return app.days[date.getDay()] + ' ' + date.getDate() + ' ' + app.months[date.getMonth()];
 		});
 
+		Handlebars.registerHelper('ifEq', function (v1, v2, options) {
+			if (v1 == v2)
+				return options.fn(this);
+
+			return options.inverse(this);
+		});
+
 		async.parallel({
 			json: function (cb) {
-				app.apiRequest('timetable', ['time=' + app.data.date.toISOString()], function (json) {
+				app.apiRequest('timetable', {time: app.data.date.toISOString(), elementType: app.data.elementType, elementId: app.data.elementId}, function (json) {
 					app.data.version = json.version;
 					app.updateTimetable(json.result);
 
 					cb();
 				});
 			},
-			classes: function (cb) {
-				app.apiRequest('classes', [], function (json) {
-					app.updateClasslist(json.result);
+			elements: function (cb) {
+				app.getElements(app.data.elementType, function (result) {
+					app.updateClasslist(result);
 
 					cb();
 				});
 			},
 			tpl: function (cb) {
-				if (app.enableCache && window.localStorage.getItem('api-site') !== null) {
-					var json = JSON.parse(window.localStorage.getItem('tpl-site'));
-
-					if (json.date >= Date.now() - 15 * 60 * 1000) {
-						app.tpl = Handlebars.compile(json.tpl);
-
-						cb();
-						return;
-					}
-				}
-
 				$.get('assets/tpl/site.hbs', function (tpl) {
-					window.localStorage.setItem('tpl-site', JSON.stringify({date: Date.now(), tpl: tpl}));
-
 					app.tpl = Handlebars.compile(tpl);
 
 					cb();
@@ -141,10 +143,25 @@ var app = {
 			app.data.loading = false;
 			app.updateTemplate();
 		});
+	},
+
+	save: function () {
+		window.localStorage.setItem('elementType', app.data.elementType);
+		window.localStorage.setItem('elementId', app.data.elementId);
+
+		if (app.data.elementType === null)
+			window.localStorage.removeItem('elementType');
+
+		if (app.data.elementId === null)
+			window.localStorage.removeItem('elementId');
 	}
 };
 
 
 window.addEventListener('load', function () {
 	app.initialize();
+});
+
+window.addEventListener('beforeunload', function () {
+	app.save();
 });

@@ -6,8 +6,8 @@ $action = $_GET['action'] ?? null;
 switch ($action) {
 	case 'timetable':
 		$fields['ajaxCommand'] = 'getWeeklyTimetable';
-		$fields['elementType'] = 1;
-		$fields['elementId'] = 3637; // id of class
+		$fields['elementType'] = $_GET['elementType'] ?? 1;
+		$fields['elementId'] = $_GET['elementId'] ?? 3637; // id of class
 		$fields['date'] = date('Ymd', strtotime($_GET['time']) ?? time());
 		$fields['formatId'] = 3;
 		$fields['departmentId'] = 29;
@@ -15,12 +15,11 @@ switch ($action) {
 
 		break;
 
-	case 'classes':
+	case 'elements':
 		$fields['ajaxCommand'] = 'getPageConfig';
-		$fields['type'] = 1;
+		$fields['type'] = $_GET['elementType'] ?? 1;
 		$fields['filter.departmentId'] = -1;
 		$fields['formatId'] = 1;
-		$fields['id'] = 3637;
 
 		break;
 }
@@ -125,7 +124,7 @@ switch ($action) {
 		$result = $periods;
 		break;
 
-	default:
+	case 'elements':
 		$classes = [];
 
 		foreach ($json['elements'] as $element) {

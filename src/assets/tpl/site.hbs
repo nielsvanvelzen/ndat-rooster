@@ -2,33 +2,39 @@
 	<div class="row">
 		<div class="col-sm-12 col-md-offset-3 col-md-6 col-lg-offset-col-4 lg-4">
 			<div id="items">
-				<div class="clearfix">
-					<div class="col-xs-2 text-left">
-						<a href="javascript:app.addDate(-1);"><i class="glyphicon glyphicon-chevron-left"></i></a>
+				<ul class="nav nav-tabs nav-justified">
+					<li><a href="javascript:app.updateClasslist(null); app.data.elementType = 1; app.data.elementId = null; app.updateTemplate(); app.getElements(app.data.elementType, function(elements) { app.updateClasslist(elements); app.updateTemplate(); });">Klas</a></li>
+					<li><a href="javascript:app.updateClasslist(null); app.data.elementType = 4; app.data.elementId = null; app.updateTemplate(); app.getElements(app.data.elementType, function(elements) { app.updateClasslist(elements); app.updateTemplate(); });">Lokaal</a></li>
+					<li><a href="javascript:app.updateClasslist(null); app.data.elementType = 2; app.data.elementId = null; app.updateTemplate(); app.getElements(app.data.elementType, function(elements) { app.updateClasslist(elements); app.updateTemplate(); });">Docent</a></li>
+				</ul>
+				{{#if elementType}}
+					<div class="clearfix">
+						<div class="col-xs-5">
+							{{#if elements}}
+								<select class="select2" onchange="app.data.elementId = this.value; app.updateTimetable();">
+									{{#unless elementId}}
+										<option disabled="disabled" selected="selected">Kies een item</option>
+									{{/unless}}
+									{{#each elements}}
+										<option value="{{id}}"{{#ifEq id ../elementId}} selected="selected"{{/ifEq}}>{{display_name}}</option>
+									{{/each}}
+								</select>
+							{{else}}
+								<span class="glyphicon glyphicon-refresh"></span> Lijst wordt opgehaald
+							{{/if}}
+						</div>
+						<div class="col-xs-5">
+							{{#if elementId}}
+								<a href="javascript:app.addDate(-1);"><i class="glyphicon glyphicon-chevron-left"></i></a>
+								{{date_str date 1}}
+								<a href="javascript:app.addDate(+1);"><i class="glyphicon glyphicon-chevron-right"></i></a>
+							{{/if}}
+						</div>
 					</div>
-					<div class="col-xs-8 text-center" title="{{date_str date}}">
-						{{date_str date 1}}
-					</div>
-					<div class="col-xs-2 text-right">
-						<a href="javascript:app.addDate(+1);"><i class="glyphicon glyphicon-chevron-right"></i></a>
-					</div>
-				</div>
-				<!--<div class="dropdown">
-					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-						{{#if class.display_name}}
-							{{class.display_name}}
-						{{else}}
-							Kies een klas
-						{{/if}}
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" style="overflow: auto; max-height: 400px;">
-						{{#each classes}}
-							<li><a href="#">{{display_name}}</a></li>
-						{{/each}}
-					</ul>
-				</div>-->
-				{{#if loading}}
+				{{/if}}
+				{{#unless elementId}}
+					<h1 class="text-center"><span class="glyphicon glyphicon-arrow-up"></span></h1>
+				{{else if loading}}
 					<h1 class="text-center"><span class="glyphicon glyphicon-refresh"></span></h1>
 					<div class="text-center">Rooster wordt opgehaald.</div>
 				{{else}}
@@ -80,7 +86,7 @@
 							</div>
 						{{/if}}
 					{{/each}}
-				{{/if}}
+				{{/unless}}
 			</div>
 			<hr />
 			<a href="https://github.com/HetIsNiels/ndat-rooster" title="GitHub">{{version}}</a>
