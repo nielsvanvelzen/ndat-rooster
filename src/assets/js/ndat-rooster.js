@@ -39,6 +39,19 @@ var app = {
 		app.updateTimetable();
 	},
 
+	showTemporaryTimetable: function (type, id) {
+		var oldType = app.data.elementType;
+		var oldId = app.data.elementId;
+
+		app.data.elementType = type;
+		app.data.elementId = id;
+
+		app.updateTimetable();
+
+		app.data.elementType = oldType;
+		app.data.elementId = oldId;
+	},
+
 	updateTimetable: function (periods) {
 		if (periods === undefined) {
 			app.data.loading = true;
@@ -79,6 +92,7 @@ var app = {
 
 	updateTemplate: function () {
 		document.body.innerHTML = app.tpl(app.data);
+
 		$('.select2').select2();
 	},
 

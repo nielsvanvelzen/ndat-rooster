@@ -11,7 +11,7 @@
 					<div class="clearfix">
 						<div class="col-xs-5">
 							{{#if elements}}
-								<select class="select2" onchange="app.data.elementId = this.value; app.updateTimetable();">
+								<select class="select2" onchange="if(app.data.elementId != this.value){ app.data.elementId = this.value; app.updateTimetable(); }">
 									{{#unless elementId}}
 										<option disabled="disabled" selected="selected">Kies een item</option>
 									{{/unless}}
@@ -58,13 +58,13 @@
 										<div class="col-xs-6">
 											<p class="text-center"
 											   title="{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-												{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+												{{#each elements.[1]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
 											</p>
 										</div>
 										<div class="col-xs-6">
 											<p class="text-center"
 											   title="{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-												{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+												{{#each elements.[2]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
 											</p>
 										</div>
 									</div>
@@ -78,7 +78,7 @@
 										<div class="col-xs-6">
 											<p class="text-center"
 											   title="{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-												{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+												{{#each elements.[4]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
 											</p>
 										</div>
 									</div>
