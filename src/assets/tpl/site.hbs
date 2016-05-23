@@ -1,95 +1,98 @@
-<div class="container">
-	<div class="row">
-		<div class="col-sm-12 col-md-offset-3 col-md-6 col-lg-offset-col-4 lg-4">
-			<div id="items">
-				<ul class="nav nav-tabs nav-justified">
-					<li><a href="javascript:app.updateClasslist(null); app.data.elementType = 1; app.data.elementId = null; app.updateTemplate(); app.getElements(app.data.elementType, function(elements) { app.updateClasslist(elements); app.updateTemplate(); });">Klas</a></li>
-					<li><a href="javascript:app.updateClasslist(null); app.data.elementType = 4; app.data.elementId = null; app.updateTemplate(); app.getElements(app.data.elementType, function(elements) { app.updateClasslist(elements); app.updateTemplate(); });">Lokaal</a></li>
-					<li><a href="javascript:app.updateClasslist(null); app.data.elementType = 2; app.data.elementId = null; app.updateTemplate(); app.getElements(app.data.elementType, function(elements) { app.updateClasslist(elements); app.updateTemplate(); });">Docent</a></li>
-				</ul>
-				{{#if elementType}}
-					<div class="clearfix">
-						<div class="col-xs-5">
-							{{#if elements}}
-								<select class="select2" onchange="if(app.data.elementId != this.value){ app.data.elementId = this.value; app.updateTimetable(); }">
-									{{#unless elementId}}
-										<option disabled="disabled" selected="selected">Kies een item</option>
-									{{/unless}}
-									{{#each elements}}
-										<option value="{{id}}"{{#ifEq id ../elementId}} selected="selected"{{/ifEq}}>{{display_name}}</option>
-									{{/each}}
-								</select>
-							{{else}}
-								<span class="glyphicon glyphicon-refresh"></span> Lijst wordt opgehaald
-							{{/if}}
-						</div>
-						<div class="col-xs-5">
-							{{#if elementId}}
-								<a href="javascript:app.addDate(-1);"><i class="glyphicon glyphicon-chevron-left"></i></a>
-								{{date_str date 1}}
-								<a href="javascript:app.addDate(+1);"><i class="glyphicon glyphicon-chevron-right"></i></a>
-							{{/if}}
-						</div>
-					</div>
-				{{/if}}
-				{{#unless elementId}}
-					<h1 class="text-center"><span class="glyphicon glyphicon-arrow-up"></span></h1>
-				{{else if loading}}
-					<h1 class="text-center"><span class="glyphicon glyphicon-refresh"></span></h1>
-					<div class="text-center">Rooster wordt opgehaald.</div>
-				{{else}}
-					{{#unless periods}}
-						<h1 class="text-center"><span class="glyphicon glyphicon-alert"></span></h1>
-						<div class="text-center">Geen informatie gevonden.</div>
+<div class="app-bar primary">
+	<div class="container">
+		<ul class="nav nav-tabs nav-justified">
+			<li{{#ifEq elementType 1}} class="active"{{/ifEq}}><a href="javascript:app.updateClasslist(null); app.data.elementType = 1; app.data.elementId = null; app.updateTemplate(); app.getElements(app.data.elementType, function(elements) { app.updateClasslist(elements); app.updateTemplate(); });">Klas</a></li>
+			<li{{#ifEq elementType 4}} class="active"{{/ifEq}}><a href="javascript:app.updateClasslist(null); app.data.elementType = 4; app.data.elementId = null; app.updateTemplate(); app.getElements(app.data.elementType, function(elements) { app.updateClasslist(elements); app.updateTemplate(); });">Lokaal</a></li>
+			<li{{#ifEq elementType 2}} class="active"{{/ifEq}}><a href="javascript:app.updateClasslist(null); app.data.elementType = 2; app.data.elementId = null; app.updateTemplate(); app.getElements(app.data.elementType, function(elements) { app.updateClasslist(elements); app.updateTemplate(); });">Docent</a></li>
+		</ul>
+	</div>
+</div>
+{{#if elementType}}
+	<div class="app-bar clearfix">
+		<div class="container">
+			{{#if elements}}
+				<select class="select2" onchange="if(app.data.elementId != this.value){ app.data.elementId = this.value; app.updateTimetable(); }">
+					{{#unless elementId}}
+						<option disabled="disabled" selected="selected">Kies een item</option>
 					{{/unless}}
-					{{#each periods}}
-						{{#if isBreak}}
-							<div class="panel">
-								<div class="panel-body">
-									<p class="text-center">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
-									<p class="text-center">{{#if isLongBreak}}Tussenuur{{else}}Pauze{{/if}}</p>
-								</div>
-							</div>
-						{{else}}
-							<div class="panel" style="border-left: 5px solid {{color}};">
-								<div class="panel-body">
-									<p class="text-center">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
-									<div class="row">
-										<div class="col-xs-6">
-											<p class="text-center"
-											   title="{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-												{{#each elements.[1]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
-											</p>
-										</div>
-										<div class="col-xs-6">
-											<p class="text-center"
-											   title="{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-												{{#each elements.[2]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
-											</p>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-xs-6">
-											<p class="text-center"
-											   title="{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-												{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
-											</p>
-										</div>
-										<div class="col-xs-6">
-											<p class="text-center"
-											   title="{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-												{{#each elements.[4]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
-											</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						{{/if}}
+					{{#each elements}}
+						<option value="{{id}}"{{#ifEq id ../elementId}} selected="selected"{{/ifEq}}>{{display_name}}</option>
 					{{/each}}
-				{{/unless}}
-			</div>
-			<hr />
-			<a href="https://github.com/HetIsNiels/ndat-rooster" title="GitHub">{{version}}</a>
+				</select>
+			{{else}}
+				<span class="glyphicon glyphicon-refresh"></span> Lijst wordt opgehaald
+			{{/if}}
+
+			{{#if elementId}}
+				<div class="date-select">
+					<a class="arrow" href="javascript:app.addDate(-1);"><i class="glyphicon glyphicon-chevron-left"></i></a>
+					<span class="value" title="{{date_str date 1}}">{{date_str date 1}}</span>
+					<a class="arrow" href="javascript:app.addDate(+1);"><i class="glyphicon glyphicon-chevron-right"></i></a>
+				</div>
+			{{/if}}
 		</div>
+	</div>
+{{/if}}
+<div class="container period-container">
+	<div class="col-sm-12 col-md-offset-3 col-md-6 col-lg-offset-col-4 lg-4">
+		<div id="items">
+			{{#unless elementId}}
+				<h1 class="text-center"><span class="glyphicon glyphicon-arrow-up"></span></h1>
+			{{else if loading}}
+				<h1 class="text-center"><span class="glyphicon glyphicon-refresh"></span></h1>
+				<div class="text-center">Rooster wordt opgehaald.</div>
+			{{else}}
+				{{#unless periods}}
+					<h1 class="text-center"><span class="glyphicon glyphicon-alert"></span></h1>
+					<div class="text-center">Geen informatie gevonden.</div>
+				{{/unless}}
+				{{#each periods}}
+					{{#if isBreak}}
+						<div class="panel">
+							<div class="panel-body">
+								<p class="text-center">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
+								<p class="text-center">{{#if isLongBreak}}Tussenuur{{else}}Pauze{{/if}}</p>
+							</div>
+						</div>
+					{{else}}
+						<div class="panel" style="border-left: 5px solid {{color}};">
+							<div class="panel-body">
+								<p class="text-center">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
+								<div class="row">
+									<div class="col-xs-6">
+										<p class="text-center"
+										   title="{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+											{{#each elements.[1]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
+										</p>
+									</div>
+									<div class="col-xs-6">
+										<p class="text-center"
+										   title="{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+											{{#each elements.[2]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-6">
+										<p class="text-center"
+										   title="{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+											{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+										</p>
+									</div>
+									<div class="col-xs-6">
+										<p class="text-center"
+										   title="{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
+											{{#each elements.[4]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					{{/if}}
+				{{/each}}
+			{{/unless}}
+		</div>
+		<hr />
+		<a href="https://github.com/HetIsNiels/ndat-rooster" title="GitHub">{{version}}</a>
 	</div>
 </div>

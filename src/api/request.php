@@ -7,7 +7,7 @@ switch ($action) {
 	case 'timetable':
 		$fields['ajaxCommand'] = 'getWeeklyTimetable';
 		$fields['elementType'] = $_GET['elementType'] ?? 1;
-		$fields['elementId'] = $_GET['elementId'] ?? 3637; // id of class
+		$fields['elementId'] = $_GET['elementId'] ?? null;
 		$fields['date'] = date('Ymd', strtotime($_GET['time']) ?? time());
 		$fields['formatId'] = 3;
 		$fields['departmentId'] = 29;
