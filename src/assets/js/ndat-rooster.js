@@ -91,6 +91,7 @@ var app = {
 	},
 
 	updateTemplate: function () {
+		app.save();
 		document.body.innerHTML = app.tpl(app.data);
 
 		$('.select2').select2();

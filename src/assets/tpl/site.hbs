@@ -7,8 +7,8 @@
 		</ul>
 	</div>
 </div>
-{{#if elementType}}
-	<div class="app-bar clearfix">
+<div class="app-bar clearfix">
+	{{#if elementType}}
 		<div class="container">
 			{{#if elements}}
 				<select class="select2" onchange="if(app.data.elementId != this.value){ app.data.elementId = this.value; app.updateTimetable(); }">
@@ -31,10 +31,10 @@
 				</div>
 			{{/if}}
 		</div>
-	</div>
-{{/if}}
-<div class="container period-container">
-	<div class="col-sm-12 col-md-offset-3 col-md-6 col-lg-offset-col-4 lg-4">
+	{{/if}}
+</div>
+<div class="period-container">
+	<div class="period-list">
 		<div id="items">
 			{{#unless elementId}}
 				<h1 class="text-center"><span class="glyphicon glyphicon-arrow-up"></span></h1>
@@ -50,23 +50,23 @@
 					{{#if isBreak}}
 						<div class="panel">
 							<div class="panel-body">
-								<p class="text-center">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
-								<p class="text-center">{{#if isLongBreak}}Tussenuur{{else}}Pauze{{/if}}</p>
+								<p class="text-center text-overflow">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
+								<p class="text-center text-overflow">{{#if isLongBreak}}Tussenuur{{else}}Pauze{{/if}}</p>
 							</div>
 						</div>
 					{{else}}
 						<div class="panel" style="border-left: 5px solid {{color}};">
 							<div class="panel-body">
-								<p class="text-center">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
+								<p class="text-center text-overflow">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
 								<div class="row">
 									<div class="col-xs-6">
-										<p class="text-center"
+										<p class="text-center text-overflow"
 										   title="{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
 											{{#each elements.[1]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
 										</p>
 									</div>
 									<div class="col-xs-6">
-										<p class="text-center"
+										<p class="text-center text-overflow"
 										   title="{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
 											{{#each elements.[2]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
 										</p>
@@ -74,13 +74,13 @@
 								</div>
 								<div class="row">
 									<div class="col-xs-6">
-										<p class="text-center"
+										<p class="text-center text-overflow"
 										   title="{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
 											{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
 										</p>
 									</div>
 									<div class="col-xs-6">
-										<p class="text-center"
+										<p class="text-center text-overflow"
 										   title="{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
 											{{#each elements.[4]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
 										</p>
@@ -92,7 +92,5 @@
 				{{/each}}
 			{{/unless}}
 		</div>
-		<hr />
-		<a href="https://github.com/HetIsNiels/ndat-rooster" title="GitHub">{{version}}</a>
 	</div>
 </div>

@@ -1,50 +1,53 @@
-.app-bar{
+.app-bar {
+	width: 100%;
+	height: 40px;
 	background-color: rgb(247, 247, 247);
 	color: rgb(51, 51, 51);
 }
 
-.app-bar.primary{
+.app-bar.primary {
 	background-color: rgb(153, 153, 153);
 	color: rgb(255, 255, 255);
 }
 
-.app-bar a{
+.app-bar a {
 	color: inherit;
 }
 
-.app-bar .nav-justified li{
+.app-bar .nav-justified li {
 	width: 1%;
 	display: table-cell;
 }
 
-.app-bar .nav-justified li a{
+.app-bar .nav-justified li a {
 	border: none !important;
 	border-radius: 0 !important;
 }
 
 .app-bar .nav-justified li.active a,
 .app-bar .nav-justified li a:active,
-.app-bar .nav-justified li a:focus{
+.app-bar .nav-justified li a:focus {
 	background-color: rgb(247, 247, 247);
 	color: rgb(255, 153, 0);
 }
 
-.app-bar .nav-justified li:not(.active) a:hover{
+.app-bar .nav-justified li:not(.active) a:hover {
 	background-color: rgb(196, 196, 196);
 	color: rgb(51, 51, 51);
 }
 
-.app-bar .select2{
+.app-bar .select2 {
 	margin: 6px;
 	width: 100%;
 	max-width: 250px;
 	border-radius: 0;
 }
 
-.app-bar .date-select{
-	display: inline-block;
+.app-bar .date-select {
+	display: inline-flex;
 	width: 300px;
 	height: 28px;
+	margin: 6px;
 	line-height: 28px;
 	vertical-align: middle;
 	border: 1px solid rgb(170, 170, 170);
@@ -53,24 +56,48 @@
 	box-sizing: border-box;
 }
 
-.app-bar .date-select a.arrow{
+.app-bar .date-select a.arrow {
 	display: block;
 	width: 20px;
 	height: 20px;
-	float: left;
 	text-align: center;
 	color: rgb(136, 136, 136);
 }
 
-.app-bar .date-select span.value{
+.app-bar .date-select span.value {
 	display: block;
-	width: 258px;
-	float: left;
+	width: 100%;
 	text-align: center;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
-.period-container{
+.period-container {
 	margin-top: 6px;
+	display: flex;
+	justify-content: center;
+}
+
+.period-container .period-list {
+	width: 100%;
+	max-width: 540px;
+	height: 100%;
+}
+
+.text-overflow {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+@media (max-width: 700px) {
+	.app-bar .date-select,
+	.app-bar .select2 {
+		min-width: 100%;
+		width: 100%;
+		max-width: 100%;
+	}
+
+	.app-bar:not(.primary) {
+		height: 80px;
+	}
 }
