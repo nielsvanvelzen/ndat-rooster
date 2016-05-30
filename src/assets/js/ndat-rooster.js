@@ -80,7 +80,17 @@ var app = {
 						if (item.elements[elementKey].hasOwnProperty(elementSubKey))
 							colorString += item.elements[elementKey][elementSubKey]['longName'];
 
-			item.color = '#' + md5(colorString).slice(0, 6);
+			var days = Math.round((item.endTime.stamp * 1000 - Date.now()) / 86400000);
+
+			item.css = {
+				color: '#' + md5(colorString).slice(0, 6),
+				opacity: Math.max(0.6, Math.min(1, (item.endTime.stamp * 1000 - Date.now()) / 100))
+			};
+
+			if(days <= -1)
+				item.css.opacity = 0.6;
+			else if(days >= 1)
+				item.css.opacity = 1;
 		}
 
 		app.data.periods = periods;

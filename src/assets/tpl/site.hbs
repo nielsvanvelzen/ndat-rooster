@@ -48,14 +48,14 @@
 				{{/unless}}
 				{{#each periods}}
 					{{#if isBreak}}
-						<div class="panel">
+						<div class="period panel{{#if cancelled}} cancelled{{/if}}">
 							<div class="panel-body">
 								<p class="text-center text-overflow">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
 								<p class="text-center text-overflow">{{#if isLongBreak}}Tussenuur{{else}}Pauze{{/if}}</p>
 							</div>
 						</div>
 					{{else}}
-						<div class="panel" style="border-left: 5px solid {{color}};">
+						<div class="period panel{{#if cancelled}} cancelled{{/if}}" style="border-left: 5px solid {{css.color}}; opacity: {{css.opacity}};">
 							<div class="panel-body">
 								<p class="text-center text-overflow">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
 								<div class="row">

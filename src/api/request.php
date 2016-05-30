@@ -64,11 +64,13 @@ switch ($action) {
 			if ($period['date'] != $fields['date'])
 				continue;
 
-			if ($lastTime != null && $lastTime === $period['startTime']) {
+			if ($lastTime != null && $lastTime === $period['startTime'] && $lastTimeEnd != null && $lastTimeEnd === $period['endTime']) {
 				$newPeriod = end($periods);
 				array_pop($periods);
 			} else {
-				if ($lastTime != null && $lastTimeEnd != $period['startTime']) {
+				$date = strtotime(substr($period['date'], 6, 2) . '-' . substr($period['date'], 4, 2) . '-' . substr($period['date'], 0, 4));
+
+				if ($lastTime != null && $lastTimeEnd < $period['startTime']) {
 					$break = [];
 					$previousPeriod = end($periods);
 					$break['startTime'] = $previousPeriod['endTime'];
@@ -77,6 +79,8 @@ switch ($action) {
 						'minute' => substr($period['startTime'], -2),
 						'total' => ((int)substr($period['startTime'], 0, -2) * 60) + ((int)substr($period['startTime'], -2))
 					];
+					$break['endTime']['stamp'] = $date + $break['endTime']['total'] * 60;
+					$break['date'] = $date;
 					$break['isBreak'] = true;
 					$break['isLongBreak'] = $break['endTime']['total'] - $break['startTime']['total'] > 15;
 					$break['elements'] = [];
@@ -91,11 +95,15 @@ switch ($action) {
 					'minute' => substr($period['startTime'], -2),
 					'total' => ((int)substr($period['startTime'], 0, -2) * 60) + ((int)substr($period['startTime'], -2))
 				];
+				$newPeriod['startTime']['stamp'] = $date + $newPeriod['startTime']['total'] * 60;
 				$newPeriod['endTime'] = [
 					'hour' => substr($period['endTime'], 0, -2),
 					'minute' => substr($period['endTime'], -2),
 					'total' => ((int)substr($period['endTime'], 0, -2) * 60) + ((int)substr($period['endTime'], -2))
 				];
+				$newPeriod['endTime']['stamp'] = $date + $newPeriod['endTime']['total'] * 60;
+				$newPeriod['date'] = $date;
+				$newPeriod['cancelled'] = $period['cellState'] === 'CANCEL';
 				$newPeriod['elements'] = [];
 			}
 
@@ -118,8 +126,19 @@ switch ($action) {
 		}
 
 		usort($periods, function ($a, $b) {
-			return $a['startTime']['total'] - $b['startTime']['total'];
+			return $a['startTime']['total'] - $b['startTime']['total'] + ($a['cancelled'] ? 1 : 0);
 		});
+
+		foreach ($periods as $index => &$period) {
+			if ($period['startTime']['total'] === $period['endTime']['total'])
+				unset($periods[$index]);
+			else if ($period['isBreak']) {
+				if ($index === count($periods) - 1)
+					unset($periods[$index]);
+				else if ((!isset($periods[$index - 1]) || $periods[$index - 1]['cancelled']) && (!isset($periods[$index + 1]) || $periods[$index + 1]['cancelled']))
+					$period['cancelled'] = true;
+			}
+		}
 
 		$result = $periods;
 		break;

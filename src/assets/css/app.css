@@ -36,7 +36,7 @@
 	color: rgb(51, 51, 51);
 }
 
-.app-bar select.select2{
+.app-bar select.select2 {
 	display: none;
 }
 
@@ -89,6 +89,16 @@
 	height: 100%;
 	box-sizing: border-box;
 	padding: 6px;
+}
+
+.period-container .period-list .period.cancelled * {
+	text-decoration: line-through !important;
+}
+
+.period-container .period-list .period.cancelled {
+	opacity: 0.6;
+	pointer-events: none;
+	transform: scale(0.9);
 }
 
 .text-overflow {
