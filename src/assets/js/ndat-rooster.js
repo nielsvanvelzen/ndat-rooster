@@ -5,7 +5,7 @@ var app = {
 		elementId: null, // ao14a = 3637,
 		date: new Date()
 	},
-
+	dataStr: null,
 	tpl: null,
 	days: ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
 	months: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'november', 'december'],
@@ -171,6 +171,13 @@ var app = {
 	},
 
 	save: function () {
+		var dataStr = '/' + app.data.elementType + '/' + app.data.elementId;
+		
+		if(typeof ga === Function && dataStr !== app.dataStr) {
+			ga('set', 'page', dataStr);
+			app.dataStr = dataStr;
+		}
+		
 		window.localStorage.setItem('elementType', app.data.elementType);
 		window.localStorage.setItem('elementId', app.data.elementId);
 
