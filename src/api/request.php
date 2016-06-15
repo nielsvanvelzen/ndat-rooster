@@ -24,6 +24,13 @@ switch ($action) {
 		break;
 }
 
+$key = $action . '?' . http_build_query($fields);
+$key = md5($key);
+
+header('cache-control: max-age=3600');
+header('ETag: ' . $key);
+ob_flush();
+
 $version = null;
 
 if (file_exists(__DIR__ . '/../../version'))
