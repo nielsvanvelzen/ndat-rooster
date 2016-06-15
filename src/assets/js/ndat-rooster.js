@@ -84,12 +84,12 @@ var app = {
 
 			item.css = {
 				color: '#' + md5(colorString).slice(0, 6),
-				opacity: Math.max(0.6, Math.min(1, (item.endTime.stamp * 1000 - Date.now()) / 100))
+				opacity: item.endTime.stamp * 1000 - Date.now() > 0 ? 1 : 0.4
 			};
 
-			if(days <= -1)
+			if (days <= -1)
 				item.css.opacity = 0.6;
-			else if(days >= 1)
+			else if (days >= 1)
 				item.css.opacity = 1;
 		}
 
@@ -168,16 +168,23 @@ var app = {
 			app.data.loading = false;
 			app.updateTemplate();
 		});
+		
+		setInterval(function () {
+			if (app.data.periods) {
+				app.updateTimetable(app.data.periods);
+				app.updateTemplate();
+			}
+		}, 60 * 1000);
 	},
 
 	save: function () {
 		var dataStr = '/' + app.data.elementType + '/' + app.data.elementId;
-		
-		if(typeof ga === Function && dataStr !== app.dataStr) {
+
+		if (typeof ga === Function && dataStr !== app.dataStr) {
 			ga('set', 'page', dataStr);
 			app.dataStr = dataStr;
 		}
-		
+
 		window.localStorage.setItem('elementType', app.data.elementType);
 		window.localStorage.setItem('elementId', app.data.elementId);
 
