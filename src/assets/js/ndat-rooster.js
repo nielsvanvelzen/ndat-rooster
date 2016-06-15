@@ -40,16 +40,15 @@ var app = {
 	},
 
 	showTemporaryTimetable: function (type, id) {
-		var oldType = app.data.elementType;
-		var oldId = app.data.elementId;
+		app.data.loading = true;
+		app.updateTemplate();
 
-		app.data.elementType = type;
-		app.data.elementId = id;
+		app.apiRequest('timetable', {time: app.data.date.toISOString(), elementType: type, elementId: id}, function (json) {
+			app.updateTimetable(json.result);
 
-		app.updateTimetable();
-
-		app.data.elementType = oldType;
-		app.data.elementId = oldId;
+			app.data.loading = false;
+			app.updateTemplate();
+		});
 	},
 
 	updateTimetable: function (periods) {
@@ -78,7 +77,7 @@ var app = {
 				if (item.elements.hasOwnProperty(elementKey))
 					for (var elementSubKey in item.elements[elementKey])
 						if (item.elements[elementKey].hasOwnProperty(elementSubKey))
-							colorString += item.elements[elementKey][elementSubKey]['longName'];
+							colorString += item.elements[elementKey][elementSubKey]['id'];
 
 			var days = Math.round((item.endTime.stamp * 1000 - Date.now()) / 86400000);
 
