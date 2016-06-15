@@ -102,6 +102,20 @@ var app = {
 
 	updateTemplate: function () {
 		app.save();
+		var elementName = null;
+
+		if (app.data.elementId !== null && app.data.elementType !== null) {
+			app.elements[app.data.elementType].forEach(function (element) {
+				if (element.id == app.data.elementId)
+					elementName = element.display_name;
+			});
+		}
+
+		if (elementName !== null)
+			document.title = elementName + ' - rooster';
+		else
+			document.title = 'Rooster';
+
 		document.body.innerHTML = app.tpl(app.data);
 
 		$('.select2').select2();
@@ -168,7 +182,7 @@ var app = {
 			app.data.loading = false;
 			app.updateTemplate();
 		});
-		
+
 		setInterval(function () {
 			if (app.data.periods) {
 				app.updateTimetable(app.data.periods);

@@ -60,29 +60,25 @@
 								<p class="text-center text-overflow">{{startTime.hour}}:{{startTime.minute}} - {{endTime.hour}}:{{endTime.minute}}</p>
 								<div class="row">
 									<div class="col-xs-6">
-										<p class="text-center text-overflow"
-										   title="{{#each elements.[1]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-											{{#each elements.[1]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
+										<p class="text-center text-overflow">
+											{{#each elements.[1]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});" title="{{longName}}">{{displayname}}</a>{{/each}}
 										</p>
 									</div>
 									<div class="col-xs-6">
-										<p class="text-center text-overflow"
-										   title="{{#each elements.[2]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-											{{#each elements.[2]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
+										<p class="text-center text-overflow">
+											{{#each elements.[2]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});" title="{{longName}}">{{displayname}}</a>{{/each}}
 										</p>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-xs-6">
-										<p class="text-center text-overflow"
-										   title="{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-											{{#each elements.[3]}}{{#unless @first}}, {{/unless}}{{displayname}}{{/each}}
+										<p class="text-center text-overflow">
+											{{#each elements.[3]}}{{#unless @first}}, {{/unless}}<span title="{{longName}}">{{displayname}}</span>{{/each}}
 										</p>
 									</div>
 									<div class="col-xs-6">
-										<p class="text-center text-overflow"
-										   title="{{#each elements.[4]}}{{#unless @first}}, {{/unless}}{{longName}}{{/each}}">
-											{{#each elements.[4]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});">{{displayname}}</a>{{/each}}
+										<p class="text-center text-overflow">
+											{{#each elements.[4]}}{{#unless @first}}, {{/unless}}<a href="javascript:app.showTemporaryTimetable({{type}}, {{id}});" title="{{longName}}">{{displayname}}</a>{{/each}}
 										</p>
 									</div>
 								</div>
