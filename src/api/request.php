@@ -48,9 +48,14 @@ curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 curl_close($ch);
-$json = json_decode($response, true);
+
+$json = @json_decode($response, true);
+
+if ($json === null)
+	$action = 'webuntis.offline';
 
 $result = null;
+$error = null;
 
 switch ($action) {
 	case 'timetable':
@@ -164,12 +169,20 @@ switch ($action) {
 
 		$result = $classes;
 		break;
+	case 'webuntis.offline':
+		$result = [];
+		$error = 'webuntis.offline';
+
+		break;
 }
 
 $json = [
 	'result' => $result,
 	'version' => $version
 ];
+
+if ($error)
+	$json['error'] = $error;
 
 header('Content-Type: application/json');
 echo json_encode($json);

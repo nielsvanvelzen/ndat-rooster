@@ -33,6 +33,11 @@
 		</div>
 	{{/if}}
 </div>
+{{#if error}}
+	<div class="container">
+		<div class="alert alert-danger text-center">Er is momenteel een storing in het roostersysteem. Het is mogelijk dat er geen of incorrecte informatie getoond wordt.<br /><em>Error code: {{error}}</em></div>
+	</div>
+{{/if}}
 <div class="period-container">
 	<div class="period-list">
 		<div id="items">

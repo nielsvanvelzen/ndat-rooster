@@ -3,7 +3,8 @@ var app = {
 		loading: true,
 		elementType: null,
 		elementId: null, // ao14a = 3637,
-		date: new Date()
+		date: new Date(),
+		error: null
 	},
 	dataStr: null,
 	tpl: null,
@@ -19,6 +20,8 @@ var app = {
 				dataStr += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
 
 		$.getJSON('api/request.php?action=' + action + dataStr, function (json) {
+			app.data.error = json.error || null;
+
 			callback(json);
 		});
 	},
