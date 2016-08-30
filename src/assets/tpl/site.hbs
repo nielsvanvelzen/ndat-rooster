@@ -34,15 +34,17 @@
 	{{/if}}
 </div>
 {{#if error}}
+	{{#if elementId}}
 	<div class="container">
 		<div class="alert alert-danger text-center">Er is momenteel een storing in het roostersysteem. Het is mogelijk dat er geen of incorrecte informatie getoond wordt.<br /><em>Error code: {{error}}</em></div>
 	</div>
+	{{/if}}
 {{/if}}
 <div class="period-container">
 	<div class="period-list">
 		<div id="items">
 			{{#unless elementId}}
-				<h1 class="text-center"><span class="glyphicon glyphicon-arrow-up"></span></h1>
+				<div class="alert alert-info text-center">Welkom op het alternatieve rooster. Klik bovenaan wat voor soort rooster je wilt bekijken (klas, lokaal of docent). Kies vervolgens van welke klas/lokaal/docent je het rooster wilt zien.</div>
 			{{else if loading}}
 				<h1 class="text-center"><span class="glyphicon glyphicon-refresh"></span></h1>
 				<div class="text-center">Rooster wordt opgehaald.</div>
