@@ -138,13 +138,13 @@ switch ($action) {
 		}
 
 		usort($periods, function ($a, $b) {
-			return $a['startTime']['total'] - $b['startTime']['total'] + ($a['cancelled'] ? 1 : 0);
+			return $a['startTime']['total'] - $b['startTime']['total'] + (isset($a['cancelled']) && $a['cancelled'] ? 1 : 0);
 		});
 
 		foreach ($periods as $index => &$period) {
 			if ($period['startTime']['total'] === $period['endTime']['total'])
 				unset($periods[$index]);
-			else if ($period['isBreak']) {
+			else if (isset($period['isBreak']) && $period['isBreak']) {
 				if ($index === count($periods) - 1)
 					unset($periods[$index]);
 				else if ((!isset($periods[$index - 1]) || $periods[$index - 1]['cancelled']) && (!isset($periods[$index + 1]) || $periods[$index + 1]['cancelled']))
