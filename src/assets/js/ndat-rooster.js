@@ -9,7 +9,7 @@ var app = {
 	dataStr: null,
 	tpl: null,
 	days: ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
-	months: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'november', 'december'],
+	months: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'],
 	elements: {},
 
 	apiRequest: function (action, data, callback) {
