@@ -74,19 +74,11 @@ var app = {
 				continue;
 
 			var item = periods[key];
-
-			var colorString = '';
-			for (var elementKey in item.elements)
-				if (item.elements.hasOwnProperty(elementKey))
-					for (var elementSubKey in item.elements[elementKey])
-						if (item.elements[elementKey].hasOwnProperty(elementSubKey))
-							colorString += item.elements[elementKey][elementSubKey]['id'];
-
-			var days = Math.round((item.endTime.stamp * 1000 - Date.now()) / 86400000);
+			var days = Math.round((item.endTs * 1000 - Date.now()) / 86400000);
 
 			item.css = {
-				color: '#' + md5(colorString).slice(0, 6),
-				opacity: item.endTime.stamp * 1000 - Date.now() > 0 ? 1 : 0.4
+				color: '#' + md5(item.id).slice(0, 6),
+				opacity: item.endTs * 1000 - Date.now() > 0 ? 1 : 0.4
 			};
 
 			if (days <= -1)
